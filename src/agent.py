@@ -4,6 +4,7 @@ import os
 import platform
 import json
 from typing import Dict, List, Optional, Any
+import importlib.util
 
 class AgentConfig:
     def __init__(
@@ -28,11 +29,13 @@ class Agent:
             return self._run_list_processes()
         elif "file" in task.lower() and "list" in task.lower():
             return self._run_list_files()
+        elif "system info" in task.lower() or "system information" in task.lower():
+            return self._run_system_info()
         else:
             # Default response for unrecognized tasks
             return {
                 "response": f"I understood your task: '{task}', but I don't have a specific tool for this yet. "
-                           f"You can try 'list processes' or 'list files' as example tasks."
+                           f"You can try 'list processes', 'list files', or 'system info' as example tasks."
             }
     
     def _run_list_processes(self) -> Dict[str, Any]:
@@ -67,6 +70,31 @@ class Agent:
         except Exception as e:
             return {"error": f"Failed to list files: {str(e)}"}
     
+    def _run_system_info(self) -> Dict[str, Any]:
+        """Get system information using the system_info tool"""
+        try:
+            # Dynamically import the system_info module
+            spec = importlib.util.spec_from_file_location(
+                "system_info", 
+                os.path.join(self.tools_dir, "system_info.py")
+            )
+            system_info_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(system_info_module)
+            
+            # Call the get_system_info function
+            info = system_info_module.get_system_info()
+            
+            # Format the output for better readability
+            formatted_info = json.dumps(info, indent=2)
+            
+            return {
+                "response": "Here is the system information:",
+                "output": formatted_info,
+                "tool_used": "system_info"
+            }
+        except Exception as e:
+            return {"error": f"Failed to get system information: {str(e)}"}
+    
     def list_available_tools(self) -> List[str]:
         """Return a list of available tools"""
-        return ["system_process_lister", "file_lister"]
+        return ["system_process_lister", "file_lister", "system_info"]
