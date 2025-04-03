@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Zero</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Agent Zero</h1>
+            <p>A native Python agent for task automation</p>
+        </header>
+        
+        <div class="task-input">
+            <form id="taskForm">
+                <textarea id="taskInput" placeholder="Enter your task here... (e.g., 'list processes' or 'list files')"></textarea>
+                <button type="submit" id="submitTask">Run Task</button>
+            </form>
+        </div>
+        
+        <div class="output-container">
+            <h2>Task Output</h2>
+            <div id="outputArea">
+                <div class="welcome-message">
+                    <p>Welcome to Agent Zero! Enter a task above to get started.</p>
+                    <p>Try these example tasks:</p>
+                    <ul>
+                        <li>list processes</li>
+                        <li>list files</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

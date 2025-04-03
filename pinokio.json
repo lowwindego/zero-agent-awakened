@@ -1,0 +1,11 @@
+
+{
+  "install": {
+    "commands": [
+      "pip install -r requirements.txt"
+    ]
+  },
+  "run": {
+    "command": "python src/run_ui.py"
+  }
+}
